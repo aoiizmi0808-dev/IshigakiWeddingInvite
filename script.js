@@ -6,10 +6,9 @@
      3. スクロールに応じたシーン切り替え（海の中→浅瀬→ビーチ）＋スクロールカニ
      4. カウントダウン（リアルタイム）
      5. Gallery スライダー
-     6. FAQ アコーディオン
-     7. サウンドトグル
-     8. 同伴者フィールドの表示切替
-     9. RSVP フォーム送信（GAS 連携）
+     6. サウンドトグル
+     7. 同伴者フィールドの表示切替
+     8. RSVP フォーム送信（GAS 連携）
    ============================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -19,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initSceneScroll();
   initCountdown();
   initGallery();
-  initAccordion();
   initSoundToggle();
   initCompanionFields();
   initRsvpForm();
@@ -71,12 +69,12 @@ function initScatterCreatures() {
   if (!container) return;
 
   const scatterImages = [
-    'assets/hibiscuses.png',
-    'assets/redhibiscus.png',
-    'assets/pinkhibiscus.png',
-    'assets/hibiscuswithleaf.png',
-    'assets/shell.png',
-    'assets/starfish.png',
+    'assets/hibiscuses.PNG',
+    'assets/redhibiscus.PNG',
+    'assets/pinkhibiscus.PNG',
+    'assets/hibiscuswithleaf.PNG',
+    'assets/shell.PNG',
+    'assets/starfish.PNG',
   ];
 
   for (let i = 0; i < CONFIG.SCATTER_COUNT; i++) {
@@ -246,22 +244,7 @@ function initGallery() {
 }
 
 /* ============================================================
-   6. FAQ アコーディオン
-   ============================================================ */
-function initAccordion() {
-  const items = document.querySelectorAll('#faqAccordion .accordion-item');
-  items.forEach((item) => {
-    const header = item.querySelector('.accordion-header');
-    header.addEventListener('click', () => {
-      const isOpen = item.classList.contains('open');
-      items.forEach((i) => i.classList.remove('open'));
-      if (!isOpen) item.classList.add('open');
-    });
-  });
-}
-
-/* ============================================================
-   7. サウンドトグル
+   6. サウンドトグル
    ============================================================ */
 function initSoundToggle() {
   const btn = document.getElementById('soundToggle');

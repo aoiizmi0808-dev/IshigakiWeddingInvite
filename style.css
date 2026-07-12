@@ -7,8 +7,8 @@
 /* ---------- 変数 ---------- */
 :root{
   /* シーン背景用パステルカラー（深海→ビーチのグラデーションに使用） */
-  --color-emerald-deep: #A9E1C4;
-  --color-emerald:      #C9EFDA;
+  --color-emerald-deep: #9FE1DC;
+  --color-emerald:      #C3EEDC;
   --color-lightblue:    #BFE7F7;
   --color-sand:         #F4E8CE;
 
@@ -86,8 +86,9 @@ button{ font-family:inherit; cursor:pointer; }
 .btn-primary{ background: var(--color-sunset); color:#fff; border:none; }
 .btn-primary:hover{ transform: translateY(-2px); }
 .btn-outline{
-  border:1px solid var(--color-shallow);
-  color: var(--color-shallow);
+  background: var(--color-accent-blue);
+  border: 1px solid var(--color-accent-blue);
+  color: #fff;
   margin-top: 1.2rem;
 }
 .btn-calendar{
@@ -183,28 +184,6 @@ button{ font-family:inherit; cursor:pointer; }
   overflow: hidden;
 }
 .bubbles-container{ position:absolute; inset:0; }
-
-/* 光芒 */
-.light-rays{
-  position:absolute;
-  top:-10%; left:50%;
-  width: 140%;
-  height: 120%;
-  transform: translateX(-50%);
-  background: repeating-linear-gradient(
-    100deg,
-    rgba(255,255,255,0.10) 0px,
-    rgba(255,255,255,0.10) 40px,
-    transparent 40px,
-    transparent 120px
-  );
-  animation: raysShift 18s ease-in-out infinite alternate;
-  mix-blend-mode: screen;
-}
-@keyframes raysShift{
-  0%{ opacity:0.5; transform: translateX(-52%) rotate(0deg); }
-  100%{ opacity:0.9; transform: translateX(-48%) rotate(2deg); }
-}
 
 /* 泡（JSでdiv.bubbleを40個生成） */
 .bubble{
@@ -396,9 +375,9 @@ button{ font-family:inherit; cursor:pointer; }
   transition: background 1.6s ease;
   background: linear-gradient(180deg, var(--color-emerald-deep), var(--color-emerald));
 }
-body[data-scene="deep"]    .scene-gradient{ background: linear-gradient(180deg, #A9E1C4, #C3ECD6); }
-body[data-scene="mid"]     .scene-gradient{ background: linear-gradient(180deg, #C3ECD6, #D3F1E2); }
-body[data-scene="shallow"] .scene-gradient{ background: linear-gradient(180deg, #D3F1E2, #BFE7F7); }
+body[data-scene="deep"]    .scene-gradient{ background: linear-gradient(180deg, #9FE1DC, #B9EBDD); }
+body[data-scene="mid"]     .scene-gradient{ background: linear-gradient(180deg, #B9EBDD, #CFF0E2); }
+body[data-scene="shallow"] .scene-gradient{ background: linear-gradient(180deg, #CFF0E2, #BFE7F7); }
 body[data-scene="beach"]   .scene-gradient{ background: linear-gradient(180deg, #BFE7F7, #F4E8CE); }
 
 /* ============================================================
@@ -553,32 +532,6 @@ body[data-scene="beach"]   .scene-gradient{ background: linear-gradient(180deg, 
   background: rgba(0,0,0,0.2);
 }
 .gallery-dots span.active{ background: var(--color-shallow); }
-
-/* ============================================================
-   FAQ（アコーディオン）
-   ============================================================ */
-.accordion-item{ border-bottom: 1px solid rgba(0,0,0,0.1); }
-.accordion-header{
-  width:100%; text-align:left;
-  background:none; border:none;
-  padding: 1.2rem 0.2rem;
-  font-size: 1rem;
-  display:flex; justify-content:space-between; align-items:center;
-}
-.accordion-header::after{
-  content: '+';
-  font-family: var(--font-en);
-  font-size: 1.4rem;
-  transition: transform .3s ease;
-}
-.accordion-item.open .accordion-header::after{ transform: rotate(45deg); }
-.accordion-body{
-  max-height:0;
-  overflow:hidden;
-  transition: max-height .4s ease;
-}
-.accordion-item.open .accordion-body{ max-height: 300px; }
-.accordion-body p{ padding: 0 0.2rem 1.2rem; line-height:1.8; margin:0; }
 
 /* ============================================================
    RSVP
