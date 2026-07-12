@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const CONFIG = {
   // ここに GAS を「ウェブアプリとして公開」した URL を貼る
   // 例: https://script.google.com/macros/s/XXXXXXXXXXXXXXXX/exec
-  GAS_ENDPOINT: 'https://script.google.com/macros/s/AKfycbw8g0QIaJqX9mObahjbJCG_uvEUmdAk-th4vKR3PCecCvBPeOqYGRCnu8UPQXKX0tbb7A/exec',
+  GAS_ENDPOINT: 'https://script.google.com/macros/s/AKfycbwaX2iR7kkaU3bOBZxJUYxe8MS4j-41if8e9y35R5-JO7wg7SzcLYwxvZ0jSq-zieHDsA/exec',
 
   BUBBLE_COUNT: 40,
   SCATTER_COUNT: 16,
