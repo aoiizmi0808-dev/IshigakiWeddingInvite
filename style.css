@@ -1,0 +1,693 @@
+/* ============================================================
+   Ishigaki Wedding Invitation — style.css
+   構成: 変数定義 / リセット / Hero・海中エフェクト / シーン背景遷移 /
+        ガラスモーフィズム / 各セクション / RSVPフォーム / Footer / レスポンシブ
+   ============================================================ */
+
+/* ---------- 変数 ---------- */
+:root{
+  /* シーン背景用パステルカラー（深海→ビーチのグラデーションに使用） */
+  --color-emerald-deep: #A9E1C4;
+  --color-emerald:      #C9EFDA;
+  --color-lightblue:    #BFE7F7;
+  --color-sand:         #F4E8CE;
+
+  /* アクセント（ボタン・アイコンなど視認性が必要な箇所） */
+  --color-accent-blue:  #1b8fae;
+  --color-sunset:       #f2865e;
+  --color-night:        #1f3d3a;
+  --color-foam:         #ffffff;
+  --color-text-dark:    #0c2233;
+  --color-text-light:   #ffffff;
+  --color-accent:       #ffd27a;
+
+  /* 後方互換のためのエイリアス */
+  --color-deep-sea: var(--color-emerald-deep);
+  --color-mid-sea:  var(--color-emerald);
+  --color-shallow:  var(--color-accent-blue);
+  --color-beach:    var(--color-sand);
+
+  --font-serif: 'Noto Serif JP', serif;
+  --font-en:    'Cormorant Garamond', serif;
+
+  --glass-bg:     rgba(255,255,255,0.35);
+  --glass-border: rgba(255,255,255,0.55);
+
+  --section-padding: 6rem 1.5rem;
+  --max-width: 960px;
+}
+
+/* ---------- リセット ---------- */
+*, *::before, *::after{ box-sizing: border-box; }
+html{ scroll-behavior: smooth; }
+body{
+  margin:0;
+  font-family: var(--font-serif);
+  color: var(--color-text-dark);
+  background: var(--color-emerald);
+  overflow-x: hidden;
+}
+img{ max-width:100%; display:block; }
+a{ color:inherit; }
+ul, ol{ list-style:none; margin:0; padding:0; }
+button{ font-family:inherit; cursor:pointer; }
+
+.section-label{
+  font-family: var(--font-en);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+  text-align:center;
+}
+.section-title{
+  text-align:center;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  margin: 0 0 2.5rem;
+  letter-spacing: 0.08em;
+}
+.section{
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--section-padding);
+  position: relative;
+  z-index: 1;
+}
+
+.btn{
+  display:inline-block;
+  padding: 0.9rem 2.2rem;
+  border-radius: 999px;
+  text-decoration:none;
+  font-family: var(--font-en);
+  letter-spacing: 0.1em;
+  transition: transform .3s ease, background .3s ease;
+}
+.btn-primary{ background: var(--color-sunset); color:#fff; border:none; }
+.btn-primary:hover{ transform: translateY(-2px); }
+.btn-outline{
+  border:1px solid var(--color-shallow);
+  color: var(--color-shallow);
+  margin-top: 1.2rem;
+}
+.btn-calendar{
+  margin-top: 1.4rem;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.5);
+  color:#fff;
+  backdrop-filter: blur(6px);
+}
+
+/* ---------- サウンドトグル ---------- */
+.sound-toggle{
+  position: fixed;
+  top: 1.2rem; right: 1.2rem;
+  z-index: 50;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  backdrop-filter: blur(6px);
+  color:#fff;
+  font-size: 1.1rem;
+}
+
+/* ---------- RSVPフローティングボタン ---------- */
+.rsvp-floating-btn{
+  position: fixed;
+  right: 1.2rem;
+  bottom: 1.2rem;
+  z-index: 60;
+  width: 78px; height: 78px;
+  border-radius: 50%;
+  background: var(--color-sunset);
+  color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  text-align:center;
+  text-decoration:none;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+  transition: transform .25s ease;
+  animation: rsvpPulse 2.6s ease-in-out infinite;
+}
+.rsvp-floating-btn:hover{ transform: scale(1.08); }
+.rsvp-floating-text{ line-height: 1.3; }
+@keyframes rsvpPulse{
+  0%, 100%{ box-shadow: 0 6px 18px rgba(0,0,0,0.3), 0 0 0 0 rgba(242,134,94,0.5); }
+  50%{ box-shadow: 0 6px 18px rgba(0,0,0,0.3), 0 0 0 10px rgba(242,134,94,0); }
+}
+@media (max-width: 640px){
+  .rsvp-floating-btn{ width: 64px; height: 64px; font-size: 0.7rem; right: 0.8rem; bottom: 0.8rem; }
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{
+  position: relative;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color: var(--color-text-light);
+}
+.hero-bg-video{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit: cover;
+  z-index: 0;
+  filter: brightness(0.75) saturate(1.1);
+}
+
+/* Hero専用の演出（光芒・波）は動画の上にのみ表示 */
+.hero-overlay-effects{
+  position:absolute; inset:0;
+  z-index: 1;
+  pointer-events:none;
+  overflow:hidden;
+}
+
+/* ============================================================
+   ページ全体を漂う海のレイヤー（泡・生き物・花・貝など）
+   position:fixed でビューポート全体を覆い、コンテンツの背後（z-index低）に
+   常時表示し続けることで「文字やボタンの背景を通り抜けていく」演出にする
+   ============================================================ */
+.ocean-layer{
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.bubbles-container{ position:absolute; inset:0; }
+
+/* 光芒 */
+.light-rays{
+  position:absolute;
+  top:-10%; left:50%;
+  width: 140%;
+  height: 120%;
+  transform: translateX(-50%);
+  background: repeating-linear-gradient(
+    100deg,
+    rgba(255,255,255,0.10) 0px,
+    rgba(255,255,255,0.10) 40px,
+    transparent 40px,
+    transparent 120px
+  );
+  animation: raysShift 18s ease-in-out infinite alternate;
+  mix-blend-mode: screen;
+}
+@keyframes raysShift{
+  0%{ opacity:0.5; transform: translateX(-52%) rotate(0deg); }
+  100%{ opacity:0.9; transform: translateX(-48%) rotate(2deg); }
+}
+
+/* 泡（JSでdiv.bubbleを40個生成） */
+.bubble{
+  position:absolute;
+  bottom:-10%;
+  border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.1));
+  animation-name: bubbleRise;
+  animation-timing-function: ease-in;
+  animation-iteration-count: infinite;
+}
+@keyframes bubbleRise{
+  0%{ transform: translateY(0) translateX(0); opacity:0; }
+  10%{ opacity: 0.8; }
+  100%{ transform: translateY(-110vh) translateX(20px); opacity:0; }
+}
+
+/* 波（SVG3層） */
+.waves{
+  position:absolute; left:0; right:0; bottom:0;
+  height: 200px;
+  z-index: 2;
+}
+.wave{
+  position:absolute; bottom:0; left:0;
+  width:100%; height:100%;
+}
+.wave path{ fill: rgba(255,255,255,0.15); }
+.wave1{ animation: waveMove 12s linear infinite; opacity:0.5; }
+.wave2{ animation: waveMove 18s linear infinite reverse; opacity:0.35; }
+.wave3{ animation: waveMove 24s linear infinite; opacity:0.25; }
+@keyframes waveMove{
+  0%{ transform: translateX(0); }
+  100%{ transform: translateX(-50%); }
+}
+
+/* 生き物共通 */
+.creature{
+  position:fixed;
+  opacity: 0.85;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.15));
+}
+
+/* ジンベエザメ：左上 → 右下へゆっくり斜めに移動 */
+.whale-shark{
+  width: 220px; top: -260px; left: -260px;
+  animation: diagonalDownRight 70s linear infinite;
+}
+@keyframes diagonalDownRight{
+  0%{ transform: translate(0,0); }
+  100%{ transform: translate(calc(100vw + 260px), calc(100vh + 260px)); }
+}
+
+/* ウミガメ：右上 → 左下へゆっくり斜めに移動 */
+.sea-turtle{
+  width: 80px; top: -100px; right: -100px; left:auto;
+  animation: diagonalDownLeft 46s linear infinite;
+  animation-delay: 3s;
+}
+.small-turtle{
+  width: 46px; top: -80px; right: -80px; left:auto;
+  animation: diagonalDownLeft 34s linear infinite;
+  animation-delay: 12s;
+}
+@keyframes diagonalDownLeft{
+  0%{ transform: translate(0,0) scaleX(-1); }
+  100%{ transform: translate(calc(-100vw - 160px), calc(100vh + 160px)) scaleX(-1); }
+}
+
+/* イルカ：ジャンプしながら進む */
+.dolphin{
+  width: 100px; top: 30%; left: -160px;
+  animation: dolphinJump 16s ease-in-out infinite;
+}
+@keyframes dolphinJump{
+  0%{ transform: translate(0,0) rotate(0deg); }
+  12%{ transform: translate(20vw,-70px) rotate(-18deg); }
+  25%{ transform: translate(40vw,0) rotate(0deg); }
+  37%{ transform: translate(60vw,-70px) rotate(-18deg); }
+  50%{ transform: translate(80vw,0) rotate(0deg); }
+  100%{ transform: translate(120vw,10px) rotate(0deg); }
+}
+
+/* 魚：ランダムな高さ・速さで泳ぐ（開始位置・速度はJSでランダム設定） */
+.angelfish, .fish{
+  width: 46px; opacity:0.8;
+  animation-name: swimRandom;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes swimRandom{
+  0%{ transform: translateX(0) translateY(0) scaleX(1); }
+  49%{ transform: translateX(calc(100vw + 120px)) translateY(-20px) scaleX(1); }
+  50%{ transform: translateX(calc(100vw + 120px)) translateY(-20px) scaleX(-1); }
+  99%{ transform: translateX(0) translateY(0) scaleX(-1); }
+  100%{ transform: translateX(0) translateY(0) scaleX(1); }
+}
+
+.seahorse{
+  width: 30px; top: 70%; left: 12%;
+  animation: seahorseBob 5s ease-in-out infinite;
+}
+@keyframes seahorseBob{
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-14px); }
+}
+
+/* ハイビスカス・貝・ヒトデ：ランダムな位置にふわっと出現して消える */
+.scatter-container{ position:fixed; inset:0; }
+.scatter-item{
+  position:absolute;
+  width: 30px;
+  opacity: 0;
+  animation-name: scatterAppear;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+@keyframes scatterAppear{
+  0%{ opacity:0; transform: scale(0.6) rotate(0deg); }
+  15%{ opacity:0.85; transform: scale(1) rotate(6deg); }
+  85%{ opacity:0.85; transform: scale(1) rotate(-4deg); }
+  100%{ opacity:0; transform: scale(0.6) rotate(0deg); }
+}
+
+/* スクロールに合わせて縦に歩くカニ（スクロールバー代わり） */
+.scroll-crab{
+  position: fixed;
+  right: 4px;
+  top: 10%;
+  width: 30px;
+  z-index: 45;
+  pointer-events: none;
+  filter: drop-shadow(0 3px 5px rgba(0,0,0,0.25));
+  transition: top 0.15s linear;
+  animation: crabWiggle 0.6s ease-in-out infinite;
+}
+@keyframes crabWiggle{
+  0%,100%{ transform: rotate(-4deg); }
+  50%{ transform: rotate(4deg); }
+}
+@media (max-width: 640px){
+  .scroll-crab{ width: 22px; right: 2px; }
+}
+
+.hero-content{
+  position:relative; z-index:3;
+  text-align:center;
+}
+.hero-eyebrow{
+  font-family: var(--font-en);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+.hero-title{
+  font-family: var(--font-en);
+  font-size: clamp(2.6rem, 8vw, 5rem);
+  margin: 0 0 1rem;
+  font-weight: 500;
+}
+.hero-date{ letter-spacing: 0.15em; margin-bottom: 3rem; }
+.scroll-indicator{
+  display:flex; flex-direction:column; align-items:center; gap:0.5rem;
+  font-family: var(--font-en);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+}
+.scroll-line{
+  width:1px; height: 40px;
+  background: rgba(255,255,255,0.6);
+  animation: scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine{
+  0%{ transform: scaleY(0); transform-origin: top; }
+  50%{ transform: scaleY(1); transform-origin: top; }
+  51%{ transform-origin: bottom; }
+  100%{ transform: scaleY(0); transform-origin: bottom; }
+}
+
+/* ============================================================
+   シーン背景遷移（海の中 → 浅瀬 → ビーチ）
+   淡いエメラルドグリーン → 水色 → 砂色へスムーズに移行する
+   body[data-scene] を script.js がスクロール量に応じて切り替える
+   ============================================================ */
+.scene-gradient{
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  transition: background 1.6s ease;
+  background: linear-gradient(180deg, var(--color-emerald-deep), var(--color-emerald));
+}
+body[data-scene="deep"]    .scene-gradient{ background: linear-gradient(180deg, #A9E1C4, #C3ECD6); }
+body[data-scene="mid"]     .scene-gradient{ background: linear-gradient(180deg, #C3ECD6, #D3F1E2); }
+body[data-scene="shallow"] .scene-gradient{ background: linear-gradient(180deg, #D3F1E2, #BFE7F7); }
+body[data-scene="beach"]   .scene-gradient{ background: linear-gradient(180deg, #BFE7F7, #F4E8CE); }
+
+/* ============================================================
+   ガラスモーフィズム（ご挨拶セクション）
+   ============================================================ */
+.glass{ display:flex; justify-content:center; }
+.glass-card{
+  background: rgba(255,255,255,0.55);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  color: var(--color-text-dark);
+  max-width: 640px;
+  text-align:center;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+.greeting-text{ line-height: 2; margin-bottom: 2rem; }
+.greeting-names{ font-family: var(--font-en); letter-spacing: 0.1em; font-size:1.2rem; }
+
+/* ============================================================
+   Countdown
+   ============================================================ */
+.countdown{ text-align:center; color: var(--color-text-dark); }
+.countdown-timer{
+  display:flex; justify-content:center; gap: 1.5rem; flex-wrap: wrap;
+}
+.countdown-item{
+  display:flex; flex-direction:column; align-items:center;
+  background: rgba(255,255,255,0.55);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 1.2rem 1.4rem;
+  min-width: 80px;
+  backdrop-filter: blur(10px);
+}
+.countdown-item .num{ font-family: var(--font-en); font-size: 2.2rem; }
+.countdown-item .unit{ font-size: 0.75rem; letter-spacing: 0.15em; opacity:0.8; }
+
+/* ============================================================
+   Story
+   ============================================================ */
+.story-timeline{ display:flex; flex-direction:column; gap: 3rem; }
+.story-item{ display:flex; gap: 2rem; align-items:center; flex-wrap:wrap; }
+.story-item.reverse{ flex-direction: row-reverse; }
+.story-photo{ flex:1 1 280px; border-radius:16px; overflow:hidden; }
+.story-photo img{ width:100%; height:100%; object-fit:cover; }
+.story-text{ flex:1 1 280px; }
+.story-date{ font-family: var(--font-en); opacity:0.7; margin-bottom:0.4rem; }
+
+/* ============================================================
+   Schedule
+   ============================================================ */
+.schedule-list{
+  border-left: 2px solid var(--color-accent);
+  margin-left: 1rem;
+}
+.schedule-list li{
+  position:relative;
+  padding: 1rem 0 1rem 1.6rem;
+  display:flex; gap:1.2rem;
+}
+.schedule-list li::before{
+  content:'';
+  position:absolute; left:-7px; top: 1.4rem;
+  width:12px; height:12px;
+  border-radius:50%;
+  background: var(--color-accent);
+}
+.schedule-list .time{ font-family: var(--font-en); font-weight:600; min-width: 64px; }
+
+/* ============================================================
+   Venue / Travel
+   ============================================================ */
+.venue{ text-align:center; }
+.venue-lead{ margin-bottom: 1.5rem; line-height: 1.9; }
+.venue-map-link{ display:block; cursor:pointer; }
+.venue-map-link .venue-map iframe{ pointer-events:none; }
+.venue-map iframe{ border-radius: 16px; }
+
+/* ---------- Hotels ---------- */
+.hotel-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  text-align:center;
+}
+.hotel-card{
+  background: rgba(255,255,255,0.6);
+  border-radius: 16px;
+  padding: 1.8rem 1.4rem;
+}
+.hotel-card h3{ margin-top:0; margin-bottom: 1rem; font-size: 1.05rem; }
+.hotel-card .btn{ margin-top: 0; }
+
+/* ---------- Checklist ---------- */
+.checklist-list{ max-width: 560px; margin: 0 auto; text-align:center; }
+.checklist-list li{
+  padding: 1.4rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+.checklist-title{ font-weight:600; margin: 0 0 0.8rem; }
+.checklist-buttons{ display:flex; gap: 0.8rem; flex-wrap: wrap; justify-content:center; }
+.checklist-buttons .btn{ margin-top:0; }
+.checklist-note{ opacity:0.75; margin:0; }
+
+/* ---------- Dress Code ---------- */
+.dresscode{ text-align:center; }
+.dresscode-swatches{
+  display:flex; justify-content:center; gap: 0.9rem; margin-bottom: 2rem;
+}
+.swatch{
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display:inline-block;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15), inset 0 0 0 1px rgba(0,0,0,0.05);
+}
+.dresscode-text{ line-height: 1.9; max-width: 560px; margin: 0 auto; }
+
+/* ---------- Memories ---------- */
+.memories{ text-align:center; }
+.memories-text{ margin-bottom: 1.8rem; opacity:0.85; }
+
+/* ============================================================
+   Gallery
+   ============================================================ */
+.gallery-slider{
+  position:relative;
+  width:100%;
+  aspect-ratio: 4/3;
+  border-radius: 16px;
+  overflow:hidden;
+}
+.gallery-slider .slide{
+  position:absolute; inset:0;
+  opacity:0;
+  transition: opacity .6s ease;
+}
+.gallery-slider .slide.active{ opacity:1; }
+.gallery-slider img{ width:100%; height:100%; object-fit:cover; }
+.gallery-controls{
+  display:flex; align-items:center; justify-content:center;
+  gap: 1rem; margin-top:1rem;
+}
+.gallery-controls button{
+  background:none; border:none; font-size:1.8rem; color: var(--color-shallow);
+}
+.gallery-dots{ display:flex; gap:0.5rem; }
+.gallery-dots span{
+  width:8px; height:8px; border-radius:50%;
+  background: rgba(0,0,0,0.2);
+}
+.gallery-dots span.active{ background: var(--color-shallow); }
+
+/* ============================================================
+   FAQ（アコーディオン）
+   ============================================================ */
+.accordion-item{ border-bottom: 1px solid rgba(0,0,0,0.1); }
+.accordion-header{
+  width:100%; text-align:left;
+  background:none; border:none;
+  padding: 1.2rem 0.2rem;
+  font-size: 1rem;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.accordion-header::after{
+  content: '+';
+  font-family: var(--font-en);
+  font-size: 1.4rem;
+  transition: transform .3s ease;
+}
+.accordion-item.open .accordion-header::after{ transform: rotate(45deg); }
+.accordion-body{
+  max-height:0;
+  overflow:hidden;
+  transition: max-height .4s ease;
+}
+.accordion-item.open .accordion-body{ max-height: 300px; }
+.accordion-body p{ padding: 0 0.2rem 1.2rem; line-height:1.8; margin:0; }
+
+/* ============================================================
+   RSVP
+   ============================================================ */
+.rsvp{ text-align:center; }
+.rsvp-lead{ margin-bottom: 2.5rem; opacity:0.8; }
+.rsvp-form{ text-align:left; max-width: 560px; margin: 0 auto; }
+.form-row{ margin-bottom: 1.4rem; display:flex; flex-direction:column; gap:0.4rem; }
+.form-row label{ font-size:0.9rem; letter-spacing:0.03em; }
+.required{ color: var(--color-sunset); margin-left:0.2rem; }
+.form-row input,
+.form-row select,
+.form-row textarea{
+  padding: 0.7rem 0.9rem;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
+  background:#fff;
+}
+.radio-group{ display:flex; gap: 1.5rem; }
+.companion-group{
+  padding: 1.2rem 1.2rem 0.2rem;
+  margin-bottom: 1rem;
+  border-left: 2px solid rgba(0,0,0,0.08);
+  background: rgba(0,0,0,0.02);
+  border-radius: 0 8px 8px 0;
+}
+.companion-group-title{
+  font-weight: 600;
+  margin: 0 0 0.8rem;
+  opacity: 0.8;
+}
+.radio-group label{ display:flex; align-items:center; gap:0.4rem; }
+#rsvpSubmit{ width:100%; border:none; margin-top: 0.5rem; }
+.form-status{ text-align:center; margin-top: 1rem; min-height: 1.4em; }
+.form-status.success{ color: #2a7a4a; }
+.form-status.error{ color: #c0392b; }
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.footer{
+  position: relative;
+  background: var(--color-night);
+  color: #fff;
+  text-align:center;
+  padding: 5rem 1.5rem 3rem;
+  overflow:hidden;
+}
+.footer-scene{ position:absolute; inset:0; pointer-events:none; }
+.footer-wave{ position:absolute; bottom:0; left:0; width:100%; height:80px; }
+.footer-wave path{ fill: rgba(255,255,255,0.06); }
+.footer-crab{
+  position:absolute; bottom: 20px; left: -40px;
+  width: 34px;
+  animation: crabWalk 16s linear infinite;
+}
+@keyframes crabWalk{
+  0%{ left:-40px; }
+  100%{ left: calc(100% + 40px); }
+}
+.footer-names{ font-family: var(--font-en); font-size:1.6rem; letter-spacing:0.1em; position:relative; z-index:1; }
+.footer-date{ opacity:0.75; margin: 0.4rem 0 1.6rem; position:relative; z-index:1; }
+.footer-copy{ font-size: 0.75rem; opacity:0.5; position:relative; z-index:1; }
+
+/* ============================================================
+   レスポンシブ（スマートフォン最適化）
+   ============================================================ */
+@media (max-width: 640px){
+  :root{ --section-padding: 3.5rem 1.2rem; }
+
+  .story-item, .story-item.reverse{ flex-direction: column; }
+  .countdown-timer{ gap: 0.6rem; }
+  .countdown-item{ min-width: 60px; padding: 0.9rem 0.7rem; }
+  .countdown-item .num{ font-size: 1.7rem; }
+
+  .section-title{ margin-bottom: 1.8rem; }
+
+  .venue-map iframe{ height: 260px; }
+
+  .hotel-grid{ grid-template-columns: 1fr; }
+  .checklist-buttons{ flex-direction: column; align-items:center; }
+  .checklist-buttons .btn{ width: 100%; max-width: 260px; text-align:center; }
+
+  .dresscode-swatches{ gap: 0.6rem; }
+  .swatch{ width: 34px; height: 34px; }
+
+  .gallery-controls button{ font-size: 1.5rem; }
+
+  /* 生き物・花はモバイルでは控えめなサイズ・数に */
+  .whale-shark{ width: 140px; }
+  .sea-turtle{ width: 56px; }
+  .small-turtle{ width: 34px; }
+  .dolphin{ width: 70px; }
+  .angelfish, .fish{ width: 32px; }
+  .seahorse{ width: 22px; }
+  .scatter-item{ width: 20px; }
+
+  .btn{ padding: 0.8rem 1.8rem; font-size: 0.95rem; }
+}
+
+@media (max-width: 400px){
+  .hero-title{ font-size: 2.4rem; }
+  .countdown-timer{ gap: 0.5rem; }
+  .countdown-item{ min-width: 52px; }
+}
+
+/* prefers-reduced-motion対応 */
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}

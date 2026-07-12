@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>石垣島 Wedding Invitation | ディラン &amp; 葵衣</title>
+<meta name="description" content="石垣島で結ばれる二人からの結婚式ご招待状です。">
+
+<!-- OGP（あとでURL/画像を差し替え） -->
+<meta property="og:title" content="Ishigaki Wedding Invitation">
+<meta property="og:description" content="石垣島 Wedding へご招待いたします">
+<meta property="og:image" content="assets/gallery1.jpg">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<!-- 和文＋欧文フォント（好みで変更可） -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================
+     背景音声（自動再生はブラウザ制限があるためミュートボタンで制御）
+============================================ -->
+<audio id="bgm" loop preload="none">
+  <source src="assets/音声.mp4" type="audio/mp4">
+</audio>
+<button id="soundToggle" class="sound-toggle" aria-label="音声のオン・オフ">
+  <span class="icon">♪</span>
+</button>
+
+<a href="#rsvp" class="rsvp-floating-btn" aria-label="出欠回答へ">
+  <span class="rsvp-floating-text">ご出欠<br>回答</span>
+</a>
+
+<!-- ============================================
+     海の生き物・泡・花・貝など：ページ全体を通り抜けるレイヤー
+     （コンテンツの背後を漂うよう、body直下に固定表示）
+============================================ -->
+<div id="ocean-layer" class="ocean-layer" aria-hidden="true">
+  <div id="bubbles-container" class="bubbles-container"></div>
+
+  <img src="assets/bluewhale.png" alt="" class="creature whale-shark" aria-hidden="true">
+  <img src="assets/bigturtle.png" alt="" class="creature sea-turtle" aria-hidden="true">
+  <img src="assets/smallturtle.png" alt="" class="creature small-turtle" aria-hidden="true">
+  <img src="assets/dolphin.png" alt="" class="creature dolphin" aria-hidden="true">
+  <img src="assets/angelfish.png" alt="" class="creature angelfish" aria-hidden="true">
+  <img src="assets/fish.png" alt="" class="creature fish fish-a" aria-hidden="true">
+  <img src="assets/fish2.png" alt="" class="creature fish fish-b" aria-hidden="true">
+  <img src="assets/roundfish.png" alt="" class="creature fish fish-c" aria-hidden="true">
+  <img src="assets/seahorse.png" alt="" class="creature seahorse" aria-hidden="true">
+
+  <!-- ハイビスカス・貝・ヒトデ（JSでランダムな位置・タイミングに出現） -->
+  <div id="scatter-container" class="scatter-container" aria-hidden="true"></div>
+</div>
+
+<!-- スクロールに合わせて縦に歩くカニ（スクロールバー代わり） -->
+<img src="assets/crab.png" alt="" id="scrollCrab" class="scroll-crab" aria-hidden="true">
+
+<!-- ============================================
+     HERO SECTION
+============================================ -->
+<header id="hero" class="hero">
+
+  <!-- 石垣島ドローン背景動画 -->
+  <video class="hero-bg-video" autoplay muted loop playsinline poster="assets/gallery1.jpg">
+    <source src="assets/背景動画.mp4" type="video/mp4">
+  </video>
+
+  <!-- Hero専用の演出（光芒・波） -->
+  <div class="hero-overlay-effects" aria-hidden="true">
+    <div class="light-rays"></div>
+
+    <!-- 波（SVG3層） -->
+    <div class="waves">
+      <svg class="wave wave1" viewBox="0 0 1440 200" preserveAspectRatio="none"><path d="M0,100 C360,180 1080,20 1440,100 L1440,200 L0,200 Z"></path></svg>
+      <svg class="wave wave2" viewBox="0 0 1440 200" preserveAspectRatio="none"><path d="M0,120 C400,40 1040,180 1440,80 L1440,200 L0,200 Z"></path></svg>
+      <svg class="wave wave3" viewBox="0 0 1440 200" preserveAspectRatio="none"><path d="M0,140 C480,60 960,160 1440,60 L1440,200 L0,200 Z"></path></svg>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Wedding Invitation</p>
+    <h1 class="hero-title">Dylan &amp; Aoi</h1>
+    <p class="hero-date">2026.10.11 &nbsp;Ishigaki Island</p>
+    <a class="btn btn-calendar"
+       href="https://www.google.com/calendar/render?action=TEMPLATE&text=ディラン＆葵衣 結婚式&dates=20261011T060000Z/20261011T103000Z&details=石垣島での結婚式にご招待いたします。&location=Angel Gran Villa, Ishigaki, Okinawa, Japan"
+       target="_blank" rel="noopener">
+      📅 カレンダーに登録
+    </a>
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================
+     深海 → 海中 → 浅瀬 → ビーチ → 夕焼け → 星空 の背景遷移レイヤー
+     （script.js がスクロール量に応じて body に data-scene 属性を付与）
+============================================ -->
+<div id="scene-gradient" class="scene-gradient" aria-hidden="true"></div>
+
+<main>
+
+  <!-- ============================================
+       ご挨拶
+  ============================================ -->
+  <section id="greeting" class="section greeting glass">
+    <div class="glass-card">
+      <p class="section-label">Greeting</p>
+      <p class="greeting-text">
+        日頃お世話になっている皆様に感謝の気持ちをお伝えしたく、<br>
+        ささやかながら披露パーティーを執り行います。<br><br>
+        リゾートウェディングならではの開放的な雰囲気の中で、<br>
+        一緒に楽しい時間を過ごしていただければ嬉しく思います。<br><br>
+        ぜひご出席くださいますよう、心よりお願い申し上げます。
+      </p>
+      <p class="greeting-names">ディラン ＆ 葵衣</p>
+    </div>
+  </section>
+
+  <!-- ============================================
+       Countdown
+  ============================================ -->
+  <section id="countdown" class="section countdown">
+    <p class="section-label">Countdown</p>
+    <h2 class="section-title">2026.10.11</h2>
+    <div class="countdown-timer" id="countdownTimer" data-target="2026-10-11T15:00:00+09:00">
+      <div class="countdown-item"><span class="num" id="cd-days">00</span><span class="unit">Days</span></div>
+      <div class="countdown-item"><span class="num" id="cd-hours">00</span><span class="unit">Hours</span></div>
+      <div class="countdown-item"><span class="num" id="cd-minutes">00</span><span class="unit">Minutes</span></div>
+      <div class="countdown-item"><span class="num" id="cd-seconds">00</span><span class="unit">Seconds</span></div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       Story
+  ============================================ -->
+  <section id="story" class="section story">
+    <p class="section-label">Our Story</p>
+    <h2 class="section-title">二人の歩み</h2>
+    <div class="story-timeline">
+      <div class="story-item">
+        <div class="story-photo"><img src="assets/gallery1.jpg" alt="出会いの頃の写真"></div>
+        <div class="story-text">
+          <p class="story-date">20XX.XX</p>
+          <p>出会い〜ここにエピソードを記載〜</p>
+        </div>
+      </div>
+      <div class="story-item reverse">
+        <div class="story-photo"><img src="assets/gallery2.jpg" alt="プロポーズの写真"></div>
+        <div class="story-text">
+          <p class="story-date">20XX.XX</p>
+          <p>プロポーズ〜ここにエピソードを記載〜</p>
+        </div>
+      </div>
+      <div class="story-item">
+        <div class="story-photo"><img src="assets/gallery3.jpg" alt="現在の写真"></div>
+        <div class="story-text">
+          <p class="story-date">20XX.XX</p>
+          <p>そして石垣島へ〜ここにエピソードを記載〜</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       Schedule
+  ============================================ -->
+  <section id="schedule" class="section schedule">
+    <p class="section-label">Schedule</p>
+    <h2 class="section-title">当日のスケジュール</h2>
+    <ol class="schedule-list">
+      <li><span class="time">14:30</span><span class="event">受付開始</span></li>
+      <li><span class="time">15:00</span><span class="event">挙式</span></li>
+      <li><span class="time">16:00</span><span class="event">ウェルカムドリンク</span></li>
+      <li><span class="time">17:00</span><span class="event">披露宴</span></li>
+      <li><span class="time">19:30</span><span class="event">披露宴終了</span></li>
+    </ol>
+  </section>
+
+  <!-- ============================================
+       Venue
+  ============================================ -->
+  <section id="venue" class="section venue">
+    <p class="section-label">Venue</p>
+    <h2 class="section-title">石垣島へのご案内</h2>
+    <p class="venue-lead">
+      結婚式会場は <strong>Angel Gran Villa</strong>（沖縄県石垣島）です。<br>
+      石垣島へは<strong>南ぬ島石垣空港</strong>（新石垣空港）をご利用ください。
+    </p>
+
+    <a class="venue-map-link" href="https://www.google.com/maps?q=Angel+Gran+Villa+Ishigaki" target="_blank" rel="noopener" aria-label="Googleマップで開く">
+      <div class="venue-map">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3631.901765378582!2d124.1902167!3d24.4541933!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x345fe70375ead609%3A0x855214b120a4b9a3!2z44Ko44Oz44K844Or44Kw44Op44Oz44O044Kj44Op55-z5Z6j!5e0!3m2!1sen!2sjp!4v1783849220340!5m2!1sen!2sjp"
+          width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+          referrerpolicy="strict-origin-when-cross-origin" tabindex="-1">
+        </iframe>
+      </div>
+    </a>
+    <a class="btn btn-outline" href="https://www.google.com/maps?q=Angel+Gran+Villa+Ishigaki" target="_blank" rel="noopener">Googleマップで開く</a>
+  </section>
+
+  <!-- ============================================
+       Hotels（おすすめホテル）
+  ============================================ -->
+  <section id="hotels" class="section hotels">
+    <p class="section-label">Hotels</p>
+    <h2 class="section-title">おすすめホテル</h2>
+    <div class="hotel-grid">
+      <div class="hotel-card">
+        <h3>Resort in 青の洞窟</h3>
+        <a class="btn btn-outline" href="https://tabichat.com/engine/hotels/resortin_aonodoukutsu?checkin_date=2026%2F10%2F18&checkout_date=2026%2F10%2F19&sort_by=lowest_price&guests%5B0%5D%5Badults%5D=2" target="_blank" rel="noopener">公式サイトへ</a>
+      </div>
+      <div class="hotel-card">
+        <h3>りっちリゾン石垣</h3>
+        <a class="btn btn-outline" href="https://richreson.jp/ishigaki/" target="_blank" rel="noopener">公式サイトへ</a>
+      </div>
+      <div class="hotel-card">
+        <h3>“青の洞窟” Blue in Green</h3>
+        <a class="btn btn-outline" href="https://stay-more.com/hb_accommodation/%E9%9D%92%E3%81%AE%E6%B4%9E%E7%AA%9Fblue-in-green-%E5%BA%83%E3%80%852ldk/" target="_blank" rel="noopener">公式サイトへ</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       ご旅行前チェックリスト
+  ============================================ -->
+  <section id="checklist" class="section checklist">
+    <p class="section-label">Checklist</p>
+    <h2 class="section-title">ご旅行前チェックリスト</h2>
+    <ul class="checklist-list">
+      <li>
+        <p class="checklist-title">✈️ 航空券予約</p>
+        <div class="checklist-buttons">
+          <a class="btn btn-outline" href="https://www.jal.co.jp/" target="_blank" rel="noopener">JALで予約</a>
+          <a class="btn btn-outline" href="https://www.ana.co.jp/" target="_blank" rel="noopener">ANAで予約</a>
+        </div>
+      </li>
+      <li>
+        <p class="checklist-title">🏨 宿泊予約</p>
+        <div class="checklist-buttons">
+          <a class="btn btn-outline" href="https://travel.rakuten.co.jp/yado/okinawa/ritou.html?lid=jparea_undated_map" target="_blank" rel="noopener">楽天トラベル</a>
+          <a class="btn btn-outline" href="https://www.jalan.net/470000/LRG_471700/SML_471702/" target="_blank" rel="noopener">じゃらん</a>
+        </div>
+      </li>
+      <li>
+        <p class="checklist-title">🚗 レンタカー予約</p>
+        <p class="checklist-note">島内移動にはレンタカーが便利です。ご希望はRSVPフォームにご記入ください。</p>
+      </li>
+      <li>
+        <p class="checklist-title">💌 ご出欠回答（2026年7月31日締切）</p>
+        <div class="checklist-buttons">
+          <a class="btn btn-primary" href="#rsvp">RSVPフォームへ</a>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============================================
+       ドレスコード
+  ============================================ -->
+  <section id="dresscode" class="section dresscode">
+    <p class="section-label">Dress Code</p>
+    <h2 class="section-title">ドレスコード</h2>
+    <div class="dresscode-swatches" aria-hidden="true">
+      <span class="swatch" style="background:#FBD3D3;"></span>
+      <span class="swatch" style="background:#FDE7B6;"></span>
+      <span class="swatch" style="background:#FFF6BF;"></span>
+      <span class="swatch" style="background:#C9EAD3;"></span>
+      <span class="swatch" style="background:#C7E3F5;"></span>
+    </div>
+    <p class="dresscode-text">
+      石垣島らしいリゾート感のあるラフな服装でお越しください！<br>
+      ビーチでの挙式を予定しておりますので、砂浜でも歩きやすい履物をご用意ください。
+    </p>
+  </section>
+
+  <!-- ============================================
+       Gallery
+  ============================================ -->
+  <section id="gallery" class="section gallery">
+    <p class="section-label">Gallery</p>
+    <h2 class="section-title">Gallery</h2>
+    <div class="gallery-slider" id="gallerySlider">
+      <div class="slide active"><img src="assets/gallery1.jpg" alt="ギャラリー写真1"></div>
+      <div class="slide"><img src="assets/gallery2.jpg" alt="ギャラリー写真2"></div>
+      <div class="slide"><img src="assets/gallery3.jpg" alt="ギャラリー写真3"></div>
+    </div>
+    <div class="gallery-controls">
+      <button id="galleryPrev" aria-label="前の写真">‹</button>
+      <div class="gallery-dots" id="galleryDots"></div>
+      <button id="galleryNext" aria-label="次の写真">›</button>
+    </div>
+  </section>
+
+  <!-- ============================================
+       Memories（思い出を共有する）
+  ============================================ -->
+  <section id="memories" class="section memories">
+    <p class="section-label">Memories</p>
+    <h2 class="section-title">思い出を共有する</h2>
+    <p class="memories-text">結婚式当日の写真や動画を、ぜひ共有してください。</p>
+    <a class="btn btn-primary" href="https://drive.google.com/drive/folders/1UGHDqvCeP2Xflyaycw8Ff9wYhHcZ7UbW" target="_blank" rel="noopener">
+      📤 写真をアップロード
+    </a>
+  </section>
+
+  <!-- ============================================
+       FAQ
+  ============================================ -->
+  <section id="faq" class="section faq">
+    <p class="section-label">FAQ</p>
+    <h2 class="section-title">よくあるご質問</h2>
+    <div class="accordion" id="faqAccordion">
+      <div class="accordion-item">
+        <button class="accordion-header">服装の指定はありますか？</button>
+        <div class="accordion-body"><p>特に指定はございませんが、南国リゾートウェディングですので動きやすい服装を推奨いたします。</p></div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header">子供の同伴は可能ですか？</button>
+        <div class="accordion-body"><p>可能です。RSVPフォームの同伴者欄にご記入ください。</p></div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header">駐車場はありますか？</button>
+        <div class="accordion-body"><p>会場に駐車場をご用意しております。台数に限りがございますので事前にお知らせください。</p></div>
+      </div>
+      <div class="accordion-item">
+        <button class="accordion-header">ご祝儀について教えてください</button>
+        <div class="accordion-body"><p>詳細は追って個別にご案内いたします。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       RSVP
+  ============================================ -->
+  <section id="rsvp" class="section rsvp">
+    <p class="section-label">RSVP</p>
+    <h2 class="section-title">出欠のご連絡</h2>
+    <p class="rsvp-lead">お手数ですが、2026年7月31日までにご回答をお願いいたします。</p>
+
+    <form id="rsvpForm" class="rsvp-form">
+      <div class="form-row">
+        <label for="name">お名前<span class="required">*</span></label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-row">
+        <label for="kana">フリガナ<span class="required">*</span></label>
+        <input type="text" id="kana" name="kana" required>
+      </div>
+      <div class="form-row">
+        <label for="email">メールアドレス<span class="required">*</span></label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="form-row">
+        <label>ご出欠<span class="required">*</span></label>
+        <div class="radio-group">
+          <label><input type="radio" name="attendance" value="出席" required> 出席</label>
+          <label><input type="radio" name="attendance" value="欠席" required> 欠席</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="plusOne">同伴者（＋1）人数</label>
+        <select id="plusOne" name="plusOne">
+          <option value="0">0名</option>
+          <option value="1">1名</option>
+          <option value="2">2名</option>
+          <option value="3">3名</option>
+        </select>
+      </div>
+
+      <div class="companion-group" id="companionRow1" hidden>
+        <p class="companion-group-title">同伴者1</p>
+        <div class="form-row">
+          <label for="companion1">お名前</label>
+          <input type="text" id="companion1" name="companion1">
+        </div>
+        <div class="form-row">
+          <label for="companion1Flight">フライト情報（分かれば）</label>
+          <input type="text" id="companion1Flight" name="companion1Flight" placeholder="例：JAL 991便 到着 13:20">
+        </div>
+        <div class="form-row">
+          <label for="companion1Allergy">アレルギー・お食事の配慮事項</label>
+          <textarea id="companion1Allergy" name="companion1Allergy" rows="2"></textarea>
+        </div>
+      </div>
+
+      <div class="companion-group" id="companionRow2" hidden>
+        <p class="companion-group-title">同伴者2</p>
+        <div class="form-row">
+          <label for="companion2">お名前</label>
+          <input type="text" id="companion2" name="companion2">
+        </div>
+        <div class="form-row">
+          <label for="companion2Flight">フライト情報（分かれば）</label>
+          <input type="text" id="companion2Flight" name="companion2Flight" placeholder="例：JAL 991便 到着 13:20">
+        </div>
+        <div class="form-row">
+          <label for="companion2Allergy">アレルギー・お食事の配慮事項</label>
+          <textarea id="companion2Allergy" name="companion2Allergy" rows="2"></textarea>
+        </div>
+      </div>
+
+      <div class="companion-group" id="companionRow3" hidden>
+        <p class="companion-group-title">同伴者3</p>
+        <div class="form-row">
+          <label for="companion3">お名前</label>
+          <input type="text" id="companion3" name="companion3">
+        </div>
+        <div class="form-row">
+          <label for="companion3Flight">フライト情報（分かれば）</label>
+          <input type="text" id="companion3Flight" name="companion3Flight" placeholder="例：JAL 991便 到着 13:20">
+        </div>
+        <div class="form-row">
+          <label for="companion3Allergy">アレルギー・お食事の配慮事項</label>
+          <textarea id="companion3Allergy" name="companion3Allergy" rows="2"></textarea>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="flight">フライト情報（分かれば）</label>
+        <input type="text" id="flight" name="flight" placeholder="例：JAL 991便 到着 13:20">
+      </div>
+
+      <div class="form-row">
+        <label for="allergy">アレルギー・お食事の配慮事項</label>
+        <textarea id="allergy" name="allergy" rows="2"></textarea>
+      </div>
+
+      <div class="form-row">
+        <label for="message">新郎新婦へのメッセージ</label>
+        <textarea id="message" name="message" rows="4"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="rsvpSubmit">送信する</button>
+      <p class="form-status" id="rsvpStatus" role="status"></p>
+    </form>
+  </section>
+
+</main>
+
+<!-- ============================================
+     Footer
+============================================ -->
+<footer class="footer">
+  <div class="footer-scene" aria-hidden="true">
+    <img src="assets/crab.png" alt="" class="footer-crab">
+    <svg class="footer-wave" viewBox="0 0 1440 120" preserveAspectRatio="none"><path d="M0,60 C360,120 1080,0 1440,60 L1440,120 L0,120 Z"></path></svg>
+  </div>
+  <p class="footer-names">ディラン &amp; 葵衣</p>
+  <p class="footer-date">2026.10.11 Ishigaki Island</p>
+  <p class="footer-copy">&copy; 2026 Ishigaki Wedding</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
