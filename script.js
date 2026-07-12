@@ -86,8 +86,8 @@ function initScatterCreatures() {
     const top = randomBetween(4, 92);
     const left = randomBetween(4, 92);
     const size = randomBetween(20, 40);
-    const duration = randomBetween(7, 14);
-    const delay = randomBetween(0, 18);
+    const duration = randomBetween(16, 28);
+    const delay = randomBetween(0, 24);
 
     img.style.top = `${top}%`;
     img.style.left = `${left}%`;
@@ -113,7 +113,7 @@ function initRandomSwimmers() {
 
 function randomizeSwimmer(el) {
   const top = randomBetween(15, 80);
-  const duration = randomBetween(16, 30);
+  const duration = randomBetween(28, 42);
   el.style.top = `${top}%`;
   el.style.left = '-80px';
   el.style.animationDuration = `${duration}s`;
