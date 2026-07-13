@@ -268,7 +268,7 @@ button{ font-family:inherit; cursor:pointer; }
 
 /* イルカ：右から左へジャンプしながら進む */
 .dolphin{
-  width: 100px; top: 30%; right:-160px; left:auto;
+  width: 100px; top: 30%; right:auto; left:-160px;
   transform: scaleX(-1);
   animation: dolphinJump 34s ease-in-out infinite;
 }
