@@ -22,7 +22,7 @@
 const CONFIG = {
   // スプレッドシートID（URLの /d/ と /edit の間の文字列）
   SPREADSHEET_ID: '1LcJMI8k0op01rKPPRglZICr2fj0tA4LXnnD1zP1U3nE',
-  SHEET_NAME: 'RSVP',
+  SHEET_NAME: 'Dylan & Aoi 結婚式参加者',
 
   // 新郎新婦の通知先メールアドレス
   GROOM_EMAIL: 'dylanshun0610@icloud.com',
