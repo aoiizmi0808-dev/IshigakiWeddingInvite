@@ -1,4 +1,4 @@
-/*************************************************
+ /*************************************************
  * Ishigaki Wedding Invitation
  * Code.gs
  * Part1
@@ -16,10 +16,10 @@ const CONFIG = {
   SHEET_NAME: "RSVP",
 
   // 新郎メール
-  GROOM_EMAIL: "新郎メールアドレス",
+  GROOM_EMAIL: "dylanshun0610@icloud.com",
 
   // 新婦メール
-  BRIDE_EMAIL: "新婦メールアドレス",
+  BRIDE_EMAIL: "aoi.izmi0808@gmail.com",
 
   // 差出人名
   FROM_NAME: "ディラン ＆ 葵衣",
