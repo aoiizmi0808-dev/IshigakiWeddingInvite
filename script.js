@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const CONFIG = {
   // ここに GAS を「ウェブアプリとして公開」した URL を貼る
   // 例: https://script.google.com/macros/s/XXXXXXXXXXXXXXXX/exec
-  GAS_ENDPOINT: 'https://script.google.com/macros/s/AKfycbwaX2iR7kkaU3bOBZxJUYxe8MS4j-41if8e9y35R5-JO7wg7SzcLYwxvZ0jSq-zieHDsA/exec',
+  GAS_ENDPOINT: 'https://script.google.com/macros/s/AKfycbw8g0QIaJqX9mObahjbJCG_uvEUmdAk-th4vKR3PCecCvBPeOqYGRCnu8UPQXKX0tbb7A/exec',
 
   BUBBLE_COUNT: 40,
   SCATTER_COUNT: 16,
@@ -113,9 +113,17 @@ function initRandomSwimmers() {
 
 function randomizeSwimmer(el) {
   const top = randomBetween(15, 80);
-  const duration = randomBetween(28, 42);
+  const duration = randomBetween(28, 40);
   el.style.top = `${top}%`;
-  el.style.left = '-80px';
+
+  if (el.classList.contains('angelfish')) {
+    // 逆方向（右から左）に泳ぐため、右端を起点にする
+    el.style.right = '-80px';
+    el.style.left = 'auto';
+  } else {
+    el.style.left = '-80px';
+  }
+
   el.style.animationDuration = `${duration}s`;
 }
 

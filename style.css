@@ -160,7 +160,7 @@ button{ font-family:inherit; cursor:pointer; }
   width:100%; height:100%;
   object-fit: cover;
   z-index: 0;
-  filter: brightness(0.75) saturate(1.1);
+  filter: brightness(0.65) saturate(1.15);
 }
 
 /* Hero専用の演出（光芒・波）は動画の上にのみ表示 */
@@ -237,12 +237,18 @@ button{ font-family:inherit; cursor:pointer; }
   100%{ transform: translate(calc(100vw + 260px), calc(100vh + 260px)); }
 }
 
-/* ウミガメ：右上 → 左下へゆっくり斜めに移動 */
+/* ウミガメ（bigturtle）：左下 → 右上へゆっくり斜めに移動 */
 .sea-turtle{
-  width: 80px; top: -100px; right: -100px; left:auto;
-  animation: diagonalDownLeft 46s linear infinite;
+  width: 80px; bottom: -100px; left: -100px; top:auto; right:auto;
+  animation: diagonalUpRight 46s linear infinite;
   animation-delay: 3s;
 }
+@keyframes diagonalUpRight{
+  0%{ transform: translate(0,0) scaleX(1); }
+  100%{ transform: translate(calc(100vw + 160px), calc(-100vh - 160px)) scaleX(1); }
+}
+
+/* 小ウミガメ：右上 → 左下へゆっくり斜めに移動（従来通り） */
 .small-turtle{
   width: 46px; top: -80px; right: -80px; left:auto;
   animation: diagonalDownLeft 34s linear infinite;
@@ -253,10 +259,10 @@ button{ font-family:inherit; cursor:pointer; }
   100%{ transform: translate(calc(-100vw - 160px), calc(100vh + 160px)) scaleX(-1); }
 }
 
-/* イルカ：ジャンプしながら進む */
+/* イルカ：ジャンプしながら進む（他の生き物と速度を統一） */
 .dolphin{
   width: 100px; top: 30%; left: -160px;
-  animation: dolphinJump 16s ease-in-out infinite;
+  animation: dolphinJump 34s ease-in-out infinite;
 }
 @keyframes dolphinJump{
   0%{ transform: translate(0,0) rotate(0deg); }
@@ -268,10 +274,10 @@ button{ font-family:inherit; cursor:pointer; }
 }
 
 /* 魚：ランダムな高さ・速さで泳ぐ（開始位置・速度はJSでランダム設定） */
-.angelfish, .fish{
+.fish{
   width: 46px; opacity:0.8;
   animation-name: swimRandom;
-  animation-duration: 32s;
+  animation-duration: 34s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
@@ -281,6 +287,22 @@ button{ font-family:inherit; cursor:pointer; }
   50%{ transform: translateX(calc(100vw + 120px)) translateY(-20px) scaleX(-1); }
   99%{ transform: translateX(0) translateY(0) scaleX(-1); }
   100%{ transform: translateX(0) translateY(0) scaleX(1); }
+}
+
+/* エンゼルフィッシュ：他の魚と逆方向（右から左）へ泳ぐ */
+.angelfish{
+  width: 46px; opacity:0.8;
+  animation-name: swimRandomReverse;
+  animation-duration: 34s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+@keyframes swimRandomReverse{
+  0%{ transform: translateX(0) translateY(0) scaleX(-1); }
+  49%{ transform: translateX(calc(-100vw - 120px)) translateY(-20px) scaleX(-1); }
+  50%{ transform: translateX(calc(-100vw - 120px)) translateY(-20px) scaleX(1); }
+  99%{ transform: translateX(0) translateY(0) scaleX(1); }
+  100%{ transform: translateX(0) translateY(0) scaleX(-1); }
 }
 
 .seahorse{
@@ -438,6 +460,7 @@ body[data-scene="beach"]   .scene-gradient{ background: linear-gradient(180deg, 
   overflow:hidden;
 }
 .story-photo img{ width:100%; height:100%; object-fit:cover; object-position:center; }
+.story-photo img.crop-low{ object-position: center 75%; }
 .story-text{ flex:1 1 280px; }
 .story-date{ font-family: var(--font-en); opacity:0.7; margin-bottom:0.4rem; }
 
