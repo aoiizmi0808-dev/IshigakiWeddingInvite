@@ -160,7 +160,7 @@ button{ font-family:inherit; cursor:pointer; }
   width:100%; height:100%;
   object-fit: cover;
   z-index: 0;
-  filter: brightness(0.65) saturate(1.15);
+  filter: brightness(0.58) saturate(1.2);
 }
 
 /* Hero専用の演出（光芒・波）は動画の上にのみ表示 */
@@ -244,8 +244,8 @@ button{ font-family:inherit; cursor:pointer; }
   animation-delay: 3s;
 }
 @keyframes diagonalUpRight{
-  0%{ transform: translate(0,0) scaleX(1); }
-  100%{ transform: translate(calc(100vw + 160px), calc(-100vh - 160px)) scaleX(1); }
+  0%{ transform: translate(0,0) rotate(90deg) scaleX(1); }
+  100%{ transform: translate(calc(100vw + 160px), calc(-100vh - 160px)) rotate(90deg) scaleX(1); }
 }
 
 /* 小ウミガメ：右上 → 左下へゆっくり斜めに移動（従来通り） */
@@ -259,18 +259,18 @@ button{ font-family:inherit; cursor:pointer; }
   100%{ transform: translate(calc(-100vw - 160px), calc(100vh + 160px)) scaleX(-1); }
 }
 
-/* イルカ：ジャンプしながら進む（他の生き物と速度を統一） */
+/* イルカ：右から左へジャンプしながら進む */
 .dolphin{
-  width: 100px; top: 30%; left: -160px;
+  width: 100px; top: 30%; right: -160px; left:auto;
   animation: dolphinJump 34s ease-in-out infinite;
 }
 @keyframes dolphinJump{
-  0%{ transform: translate(0,0) rotate(0deg); }
-  12%{ transform: translate(20vw,-70px) rotate(-18deg); }
-  25%{ transform: translate(40vw,0) rotate(0deg); }
-  37%{ transform: translate(60vw,-70px) rotate(-18deg); }
-  50%{ transform: translate(80vw,0) rotate(0deg); }
-  100%{ transform: translate(120vw,10px) rotate(0deg); }
+  0%{ transform: translate(0,0) rotate(0deg) scaleX(-1); }
+  12%{ transform: translate(-20vw,-70px) rotate(18deg) scaleX(-1); }
+  25%{ transform: translate(-40vw,0) rotate(0deg) scaleX(-1); }
+  37%{ transform: translate(-60vw,-70px) rotate(18deg) scaleX(-1); }
+  50%{ transform: translate(-80vw,0) rotate(0deg) scaleX(-1); }
+  100%{ transform: translate(-120vw,10px) rotate(0deg) scaleX(-1); }
 }
 
 /* 魚：ランダムな高さ・速さで泳ぐ（開始位置・速度はJSでランダム設定） */
@@ -298,11 +298,11 @@ button{ font-family:inherit; cursor:pointer; }
   animation-iteration-count: infinite;
 }
 @keyframes swimRandomReverse{
-  0%{ transform: translateX(0) translateY(0) scaleX(-1); }
-  49%{ transform: translateX(calc(-100vw - 120px)) translateY(-20px) scaleX(-1); }
-  50%{ transform: translateX(calc(-100vw - 120px)) translateY(-20px) scaleX(1); }
-  99%{ transform: translateX(0) translateY(0) scaleX(1); }
-  100%{ transform: translateX(0) translateY(0) scaleX(-1); }
+  0%{ transform: translateX(0) translateY(0) scaleX(1); }
+  49%{ transform: translateX(calc(-100vw - 120px)) translateY(-20px) scaleX(1); }
+  50%{ transform: translateX(calc(-100vw - 120px)) translateY(-20px) scaleX(-1); }
+  99%{ transform: translateX(0) translateY(0) scaleX(-1); }
+  100%{ transform: translateX(0) translateY(0) scaleX(1); }
 }
 
 .seahorse{
@@ -341,7 +341,7 @@ button{ font-family:inherit; cursor:pointer; }
   z-index: 45;
   pointer-events: none;
   filter: drop-shadow(0 3px 5px rgba(0,0,0,0.25));
-  transition: top 0.15s linear;
+  transition: top 0.6s ease-out;
   animation: crabWiggle 0.6s ease-in-out infinite;
 }
 @keyframes crabWiggle{
@@ -623,7 +623,7 @@ body[data-scene="beach"]   .scene-gradient{ background: linear-gradient(180deg, 
 .footer-crab{
   position:absolute; bottom: 20px; left: -40px;
   width: 34px;
-  animation: crabWalk 16s linear infinite;
+  animation: crabWalk 32s linear infinite;
 }
 @keyframes crabWalk{
   0%{ left:-40px; }
