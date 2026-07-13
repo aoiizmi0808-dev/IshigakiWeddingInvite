@@ -106,25 +106,29 @@ function initRandomSwimmers() {
   const fishEls = document.querySelectorAll('.creature.angelfish, .creature.fish');
 
   fishEls.forEach((fish) => {
-    randomizeSwimmer(fish);
-    fish.addEventListener('animationiteration', () => randomizeSwimmer(fish));
+    // 速度（animation-duration）は最初に一度だけ決めて固定する。
+    // 周回ごとに変更すると、ブラウザがアニメーションを再スタートし
+    // 瞬間的に高速で横切って見える不具合が起きるため。
+    const duration = randomBetween(30, 40);
+    fish.style.animationDuration = `${duration}s`;
+
+    if (fish.classList.contains('angelfish')) {
+      // 逆方向（右から左）に泳ぐため、右端を起点にする
+      fish.style.right = '-80px';
+      fish.style.left = 'auto';
+    } else {
+      fish.style.left = '-80px';
+    }
+
+    randomizeSwimmerHeight(fish);
+    fish.addEventListener('animationiteration', () => randomizeSwimmerHeight(fish));
   });
 }
 
-function randomizeSwimmer(el) {
+function randomizeSwimmerHeight(el) {
+  // 周回ごとに泳ぐ高さ（top）だけをランダム化し、速度は変えない
   const top = randomBetween(15, 80);
-  const duration = randomBetween(28, 40);
   el.style.top = `${top}%`;
-
-  if (el.classList.contains('angelfish')) {
-    // 逆方向（右から左）に泳ぐため、右端を起点にする
-    el.style.right = '-80px';
-    el.style.left = 'auto';
-  } else {
-    el.style.left = '-80px';
-  }
-
-  el.style.animationDuration = `${duration}s`;
 }
 
 function randomBetween(min, max) {

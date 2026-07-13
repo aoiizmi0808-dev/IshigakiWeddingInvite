@@ -162,6 +162,13 @@ button{ font-family:inherit; cursor:pointer; }
   z-index: 0;
   filter: brightness(0.58) saturate(1.2);
 }
+.hero-color-overlay{
+  position:absolute; inset:0;
+  z-index: 1;
+  background: rgba(20, 70, 110, 0.22);
+  mix-blend-mode: multiply;
+  pointer-events:none;
+}
 
 /* Hero専用の演出（光芒・波）は動画の上にのみ表示 */
 .hero-overlay-effects{
@@ -265,12 +272,12 @@ button{ font-family:inherit; cursor:pointer; }
   animation: dolphinJump 34s ease-in-out infinite;
 }
 @keyframes dolphinJump{
-  0%{ transform: translate(0,0) rotate(0deg) scaleX(-1); }
-  12%{ transform: translate(-20vw,-70px) rotate(18deg) scaleX(-1); }
-  25%{ transform: translate(-40vw,0) rotate(0deg) scaleX(-1); }
-  37%{ transform: translate(-60vw,-70px) rotate(18deg) scaleX(-1); }
-  50%{ transform: translate(-80vw,0) rotate(0deg) scaleX(-1); }
-  100%{ transform: translate(-120vw,10px) rotate(0deg) scaleX(-1); }
+  0%{ transform: translate(0,0) rotate(0deg) scaleX(1); }
+  12%{ transform: translate(-20vw,-70px) rotate(18deg) scaleX(1); }
+  25%{ transform: translate(-40vw,0) rotate(0deg) scaleX(1); }
+  37%{ transform: translate(-60vw,-70px) rotate(18deg) scaleX(1); }
+  50%{ transform: translate(-80vw,0) rotate(0deg) scaleX(1); }
+  100%{ transform: translate(-120vw,10px) rotate(0deg) scaleX(1); }
 }
 
 /* 魚：ランダムな高さ・速さで泳ぐ（開始位置・速度はJSでランダム設定） */
