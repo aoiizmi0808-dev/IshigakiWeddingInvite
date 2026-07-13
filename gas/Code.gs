@@ -1,7 +1,7 @@
 /*************************************************
  * Ishigaki Wedding Invitation
- * Google Apps Script
- * Version 2.0
+ * Code.gs
+ * Part1
  *************************************************/
 
 /*************************************************
@@ -16,18 +16,19 @@ const CONFIG = {
   SHEET_NAME: "RSVP",
 
   // 新郎メール
-  GROOM_EMAIL: "dylanshun0610@iclloud.com",
+  GROOM_EMAIL: "新郎メールアドレス",
 
   // 新婦メール
-  BRIDE_EMAIL: "aoi.izmi0808@gmail.com",
+  BRIDE_EMAIL: "新婦メールアドレス",
 
   // 差出人名
-  FROM_NAME: "ディラン＆葵衣",
+  FROM_NAME: "ディラン ＆ 葵衣",
 
-  // 件名
-  SUBJECT_REPLY: "【結婚式】ご回答ありがとうございました",
+  // ゲストへの返信件名
+  REPLY_SUBJECT: "【結婚式】ご回答ありがとうございました",
 
-  SUBJECT_NOTIFY: "【RSVP】新しい回答が届きました"
+  // 新郎新婦への通知件名
+  NOTIFY_SUBJECT: "【RSVP】新しい回答が届きました"
 
 };
 
@@ -49,43 +50,38 @@ function doPost(e) {
 
   try {
 
-    if (!e.postData) {
-
-      return output({
-
-        result: false,
-        message: "No Data"
-
+    // データが送られていない
+    if (!e || !e.postData) {
+      return jsonOutput({
+        success: false,
+        message: "No POST Data"
       });
-
     }
 
+    // script.jsから送られてきたJSON文字列
     const data = JSON.parse(e.postData.contents);
 
+    // Google Sheet保存
     saveToSpreadsheet(data);
 
+    // 自動返信メール
     sendReplyMail(data);
 
+    // 新郎新婦へ通知
     notifyBrideAndGroom(data);
 
-    return output({
-
-      result: true,
-      message: "success"
-
+    return jsonOutput({
+      success: true,
+      message: "Success"
     });
 
-  }
+  } catch (err) {
 
-  catch(error){
+    Logger.log(err);
 
-    Logger.log(error);
-
-    return output({
-
-      result:false,
-      message:error.toString()
-
+    return jsonOutput({
+      success: false,
+      message: err.toString()
     });
 
   }
@@ -95,13 +91,14 @@ function doPost(e) {
 /*************************************************
  * JSON出力
  *************************************************/
-function output(obj){
+function jsonOutput(obj) {
 
   return ContentService
-      .createTextOutput(JSON.stringify(obj))
-      .setMimeType(ContentService.MimeType.JSON);
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
 
 }
+
 /*************************************************
  * Google Sheetへ保存
  *************************************************/
@@ -111,44 +108,57 @@ function saveToSpreadsheet(data) {
 
   let sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
 
-  // シートが存在しない場合は作成
   if (!sheet) {
+
     sheet = ss.insertSheet(CONFIG.SHEET_NAME);
 
     sheet.appendRow([
       "回答日時",
+
       "お名前",
       "フリガナ",
-      "メールアドレス",
+      "メール",
+
       "出欠",
-      "同伴者人数",
+
+      "同伴人数",
 
       "同伴者1",
-      "同伴者1 フライト",
-      "同伴者1 アレルギー",
+      "同伴者1フライト",
+      "同伴者1アレルギー",
 
       "同伴者2",
-      "同伴者2 フライト",
-      "同伴者2 アレルギー",
+      "同伴者2フライト",
+      "同伴者2アレルギー",
 
       "同伴者3",
-      "同伴者3 フライト",
-      "同伴者3 アレルギー",
+      "同伴者3フライト",
+      "同伴者3アレルギー",
 
       "本人フライト",
       "本人アレルギー",
-      "メッセージ"
+
+      "メッセージ",
+
+      "送信日時"
     ]);
+
   }
 
   sheet.appendRow([
 
-    new Date(),
+    Utilities.formatDate(
+      new Date(),
+      "Asia/Tokyo",
+      "yyyy/MM/dd HH:mm:ss"
+    ),
 
     data.name || "",
     data.kana || "",
     data.email || "",
+
     data.attendance || "",
+
     data.plusOne || "0",
 
     data.companion1 || "",
@@ -165,82 +175,88 @@ function saveToSpreadsheet(data) {
 
     data.flight || "",
     data.allergy || "",
-    data.message || ""
+
+    data.message || "",
+
+    data.submittedAt || ""
 
   ]);
 
 }
 
 /*************************************************
- * 返信メール（ゲスト宛）
+ * ゲストへ自動返信メール
  *************************************************/
 function sendReplyMail(data) {
 
+  // メールアドレス未入力なら送らない
   if (!data.email) return;
 
-  const attendance =
-    data.attendance === "出席"
-      ? "ご出席"
-      : "ご欠席";
-
   const body =
-
 `${data.name} 様
 
 この度はご回答いただき、
 誠にありがとうございます。
 
----------------------------------------
+---------------------------------
+
+■ご回答内容
 
 お名前
 ${data.name}
 
-ご回答
-${attendance}
+ご出欠
+${data.attendance}
 
----------------------------------------
+---------------------------------
 
 当日お会いできることを
 心より楽しみにしております。
 
 お気をつけて石垣島までお越しください。
 
-＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 
 ディラン ＆ 葵衣
 
-＝＝＝＝＝＝＝＝＝＝＝＝＝＝`;
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝`;
 
-  MailApp.sendEmail({
+  try {
 
-    to: data.email,
+    MailApp.sendEmail({
+      to: data.email,
+      subject: CONFIG.REPLY_SUBJECT,
+      body: body,
+      name: CONFIG.FROM_NAME
+    });
 
-    subject: CONFIG.SUBJECT_REPLY,
+    Logger.log("Reply Mail Sent");
 
-    body: body,
+  } catch(err){
 
-    name: CONFIG.FROM_NAME
+    Logger.log("Reply Mail Error");
+    Logger.log(err);
 
-  });
+  }
 
 }
 
 
 /*************************************************
- * 新郎新婦へ通知
+ * 新郎新婦へ通知メール
  *************************************************/
-function notifyBrideAndGroom(data) {
+function notifyBrideAndGroom(data){
 
   const body =
 
 `新しいRSVPが届きました。
 
---------------------------------
+------------------------------
 
 回答日時
-${new Date()}
+${Utilities.formatDate(new Date(),"Asia/Tokyo","yyyy/MM/dd HH:mm:ss")}
 
-名前
+お名前
 ${data.name}
 
 フリガナ
@@ -252,7 +268,7 @@ ${data.email}
 出欠
 ${data.attendance}
 
-同伴者
+同伴人数
 ${data.plusOne}
 
 同伴者①
@@ -267,48 +283,109 @@ ${data.companion3}
 本人フライト
 ${data.flight}
 
-アレルギー
+本人アレルギー
 ${data.allergy}
 
 メッセージ
 
 ${data.message}
 
---------------------------------`;
+------------------------------`;
 
 
 
-  if (CONFIG.GROOM_EMAIL != "") {
+  try{
 
-    MailApp.sendEmail({
+    if(CONFIG.GROOM_EMAIL!=""){
 
-      to: CONFIG.GROOM_EMAIL,
+      MailApp.sendEmail({
 
-      subject: CONFIG.SUBJECT_NOTIFY,
+        to: CONFIG.GROOM_EMAIL,
 
-      body: body,
+        subject: CONFIG.NOTIFY_SUBJECT,
 
-      name: CONFIG.FROM_NAME
+        body: body,
 
-    });
+        name: CONFIG.FROM_NAME
+
+      });
+
+    }
+
+
+    if(CONFIG.BRIDE_EMAIL!=""){
+
+      MailApp.sendEmail({
+
+        to: CONFIG.BRIDE_EMAIL,
+
+        subject: CONFIG.NOTIFY_SUBJECT,
+
+        body: body,
+
+        name: CONFIG.FROM_NAME
+
+      });
+
+    }
+
+    Logger.log("Notify Mail Sent");
+
+  }catch(err){
+
+    Logger.log("Notify Mail Error");
+
+    Logger.log(err);
 
   }
 
+}
 
-  if (CONFIG.BRIDE_EMAIL != "") {
+/*************************************************
+ * 動作確認用
+ *************************************************/
+function testSave() {
 
-    MailApp.sendEmail({
+  const data = {
 
-      to: CONFIG.BRIDE_EMAIL,
+    name: "テスト太郎",
 
-      subject: CONFIG.SUBJECT_NOTIFY,
+    kana: "テストタロウ",
 
-      body: body,
+    email: Session.getActiveUser().getEmail(),
 
-      name: CONFIG.FROM_NAME
+    attendance: "出席",
 
-    });
+    plusOne: "1",
 
-  }
+    companion1: "テスト花子",
+    companion1Flight: "JAL901",
+    companion1Allergy: "なし",
+
+    companion2: "",
+    companion2Flight: "",
+    companion2Allergy: "",
+
+    companion3: "",
+    companion3Flight: "",
+    companion3Allergy: "",
+
+    flight: "JTA601",
+
+    allergy: "えび",
+
+    message: "Apps Scriptテスト",
+
+    submittedAt: new Date().toISOString()
+
+  };
+
+  saveToSpreadsheet(data);
+
+  sendReplyMail(data);
+
+  notifyBrideAndGroom(data);
+
+  Logger.log("Test Finished");
 
 }
