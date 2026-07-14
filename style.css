@@ -273,7 +273,7 @@ button{ font-family:inherit; cursor:pointer; }
   animation: dolphinJump 34s ease-in-out infinite;
 }
 @keyframes dolphinJump{
-   0%{transform:translate(0,0) scaleX(1);}
+   0%{transform:translate(0,0) scaleX(-1);}
    12%{transform:translate(20vw,-70px) rotate(18deg) scaleX(-1);}
    25%{transform:translate(40vw,0) scaleX(-1);}
    37%{transform:translate(60vw,-70px) rotate(18deg) scaleX(-1);}
